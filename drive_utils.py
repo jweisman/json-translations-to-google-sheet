@@ -61,15 +61,12 @@ def get_or_create_folder(name, parent_id):
   return folder_id  
   
 def create_or_replace_file(path_or_bytes, filename=None, parent_id=None, mimetype=None, target_mimetype=None):
-  if mimetype == None:
-    if isinstance(path_or_bytes, str):
-      mimetype = guess_mimetype(path_or_bytes)
-    elif filename != None:
-      mimetype = guess_mimetype(filename)
-
   if filename == None and isinstance(path_or_bytes, str):
     filename = path_or_bytes.rpartition('/')[-1]
-  
+
+  if mimetype == None and filename != None:
+      mimetype = guess_mimetype(filename)
+
   file_id = find_file(filename, parent_id=parent_id)
   media = MediaIoBaseUpload(path_or_bytes, mimetype)
   print(f"Uploading {filename}")

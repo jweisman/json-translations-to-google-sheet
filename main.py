@@ -1,6 +1,6 @@
 import webbrowser, argparse
 from df_utils import merge_json_to_csv, split_csv_to_json_series
-from drive import create_or_replace_file, find_file, export_file, get_or_create_folder, find_files, download_file
+from drive_utils import create_or_replace_file, find_file, export_file, get_or_create_folder, find_files, download_file
 from github_utils import get_files
 from params import DRIVE_FOLDER, GITHUB_TRANSLATIONS_DIR, LANGUAGES
 
@@ -19,10 +19,8 @@ def english_first(files):
 
 def upload_csv(json_source):
   if json_source == 'drive':
-    # Get folder
-    folder_id = get_or_create_folder(INPUT_FOLDER_NAME, DRIVE_FOLDER)
     # Find files in Drive
-    json_files = find_files('name contains ".json"', folder_id)
+    json_files = find_files('name contains ".json"', get_or_create_folder(INPUT_FOLDER_NAME, DRIVE_FOLDER))
     # Convert to list
     json_files = list(map(lambda file: {'name': file['name'], 'contents': download_file(file['id']).decode()}, json_files))
   else:
