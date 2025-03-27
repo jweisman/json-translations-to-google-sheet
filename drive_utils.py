@@ -4,6 +4,12 @@ from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
 import mimetypes, io
 from googleapiclient.errors import HttpError
 
+class MimeTypes():
+  FOLDER = 'application/vnd.google-apps.folder'
+  DOC = 'application/vnd.google-apps.document'
+  SLIDES = 'application/vnd.google-apps.presentation'
+  SHEETS = 'application/vnd.google-apps.spreadsheet'
+
 scope = ['https://www.googleapis.com/auth/drive']
 service_account_json_key = './key.json'
 credentials = service_account.Credentials.from_service_account_file(
@@ -19,7 +25,7 @@ def guess_mimetype(filename):
   return mimetypes.guess_type(filename)[0]
 
 def find_folder(name, parent_id=None):
-  query = DEFAULT_QUERY.format(name) + ' and mimeType="application/vnd.google-apps.folder"'
+  query = DEFAULT_QUERY.format(name) + f" and mimeType='{MimeTypes.FOLDER}'"
   return find_single(query, parent_id=parent_id)
 
 def find_file(name, parent_id=None):
@@ -48,7 +54,7 @@ def get_file(file_id):
 def create_folder(name, parent_id=None):
   file_metadata = {
     "name": name,
-    "mimeType": "application/vnd.google-apps.folder",
+    "mimeType": MimeTypes.FOLDER,
     "parents": [parent_id]
   }
   try:

@@ -1,16 +1,13 @@
 from github import Github, Auth
-from params import GITHUB_REPO
-from secret import GITHUB_TOKEN
 
+class GithubUtils:
 
-# using an access token
-auth = Auth.Token(GITHUB_TOKEN)
+  def __init__(self, repo, secret):
+    auth = Auth.Token(secret)
+    self.g = Github(auth=auth)
+    self.repo = repo
 
-# Public Web Github
-g = Github(auth=auth)
-
-repo = g.get_repo(GITHUB_REPO)
-
-def get_files(dir):
-  print(f"Retrieving {GITHUB_REPO}/{dir} from Github.")
-  return repo.get_contents(dir)
+  def get_files(self, dir):
+    repo = self.g.get_repo(self.repo)
+    print(f"Retrieving {self.repo}/{dir} from Github.")
+    return repo.get_contents(dir)
